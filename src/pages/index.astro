@@ -1,13 +1,16 @@
 ---
 import Layout from "../layouts/Layout.astro";
+import Carousel from '../components/Carousel.astro';
 
 // microCMS呼び出し
 import { getBlogList } from "../libs/microcms";
 const response = await getBlogList();
+const images = response.contents.map((content) => content.thumbnail);  // 追加
 ---
 
 <Layout>
   <main class="main">
+    <Carousel images={images} />
     <ul>
       {
         response.contents.map((content) => (
