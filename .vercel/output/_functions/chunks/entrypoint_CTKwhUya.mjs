@@ -10,6 +10,7 @@ import { Http2ServerResponse } from 'node:http2';
 import { a as appendForwardSlash, j as joinPaths, r as removeTrailingForwardSlash, t as trimSlashes, f as fileExtension, s as slash, p as prependForwardSlash, c as collapseDuplicateTrailingSlashes, h as hasFileExtension } from './path_BuZodYwm.mjs';
 import { unflatten as unflatten$1, stringify as stringify$1 } from 'devalue';
 import { createStorage, builtinDrivers } from 'unstorage';
+import '@vercel/routing-utils';
 import 'fast-glob';
 import nodePath from 'node:path';
 

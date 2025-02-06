@@ -1,0 +1,12 @@
+---
+import Layout from "../layouts/Layout.astro";
+const title = "静的ページ";
+const currentTime = new Date().toLocaleString();
+---
+
+<Layout>
+  <main class="main">
+    <h1>{title}</h1>
+    <p>現在の時刻: {currentTime}</p>
+  </main>
+</Layout>
