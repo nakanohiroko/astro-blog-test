@@ -1,12 +1,11 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import Carousel from '../components/Carousel.astro';
-import Counter from '../components/Counter';
 
 // microCMS呼び出し
 import { getBlogList } from "../libs/microcms";
 const response = await getBlogList();
-const images = response.contents.map((content) => content.thumbnail);  // 追加
+const images = response.contents.map((content) => content.thumbnail);
 ---
 
 <Layout>
@@ -21,9 +20,6 @@ const images = response.contents.map((content) => content.thumbnail);  // 追加
         ))
       }
     </ul>
-    <Counter client:load />
-    <a href="/static">静的ページへ</a>
-    <a href="/dynamic">動的ページへ</a>
   </main>
 </Layout>
 

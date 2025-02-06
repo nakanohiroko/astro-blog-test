@@ -9,10 +9,8 @@
     "astro": "astro"
   },
   "dependencies": {
-    "@astrojs/react": "^4.2.0",
-    "@astrojs/vercel": "^8.0.6",
-    "astro": "^5.2.5",
+    "astro": "^5.1.6",
     "microcms-js-sdk": "^3.1.2",
-    "swiper": "^11.2.0"
+    "swiper": "^11.2.1"
   }
 }
