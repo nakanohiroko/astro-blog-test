@@ -1,5 +1,5 @@
 import { defineConfig } from 'astro/config';
-import vercel from "@astrojs/vercel/serverless"; // VercelでSSRする場合 (適宜変更)
+import vercel from "@astrojs/vercel"; // VercelでSSRする場合 (適宜変更)
 import react from "@astrojs/react";
 
 // https://astro.build/config
