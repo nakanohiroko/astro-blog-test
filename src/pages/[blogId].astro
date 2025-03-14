@@ -15,6 +15,7 @@ if (slug?.value !== blogId) {
   Astro.cookies.delete(`__preview_dk`);
 }
 const blog = await getBlogDetail(blogId as string, { draftKey: draftKey?.value });
+console.log("Astro.url.searchParams:", Astro.url.searchParams);
 console.log("searchParams:", url.searchParams);
 console.log("slugParams:", slugParams);
 console.log("draftKeyParams:", draftKeyParams);
