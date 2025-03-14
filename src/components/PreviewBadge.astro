@@ -1,0 +1,67 @@
+---
+const { isPreview } = Astro.props;
+
+// プレビューでなければ表示しない
+if (!isPreview) {
+  return null;
+}
+---
+
+<div class="preview-badge">
+  <span>🛠 画面プレビュー中</span>
+  <button class="preview-exit">✖</button>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const button = document.querySelector(".preview-exit");
+    if (button) {
+      button.addEventListener("click", () => {
+        // Cookieを削除
+        document.cookie = "__preview_slug=; max-age=0;";
+        document.cookie = "__preview_dk=; max-age=0;";
+
+        // 同じページをリロード
+        location.reload();
+      });
+    }
+  });
+</script>
+
+<style>
+  .preview-badge {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 82, 82, 0.9);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+  }
+
+  .preview-badge span {
+    margin-right: 10px;
+  }
+
+  .preview-exit {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 6px 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .preview-exit:hover {
+    background: rgba(255, 255, 255, 0.3);
+  }
+</style>
