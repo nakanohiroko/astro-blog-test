@@ -5,22 +5,22 @@ import { getBlogDetail } from "../libs/microcms";
 
 // 記事の詳細情報を取得
 const { blogId } = Astro.params;
-const slug = Astro.cookies.get('__preview_slug');
-const draftKey = Astro.cookies.get('__preview_dk');
+// const slug = Astro.cookies.get('__preview_slug');
+// const draftKey = Astro.cookies.get('__preview_dk');
+const slug = Astro.url.searchParams.get("slug") ?? undefined;
+const draftKey = Astro.url.searchParams.get("dk") ?? undefined;
 
-if (slug?.value !== blogId) {
+if (slug !== blogId) {
   Astro.cookies.delete(`__prerender_bypass`);
-  Astro.cookies.delete(`__preview_slug`);
-  Astro.cookies.delete(`__preview_dk`);
+  // Astro.cookies.delete(`__preview_slug`);
+  // Astro.cookies.delete(`__preview_dk`);
 }
 
-const blog = await getBlogDetail(blogId as string, { draftKey: draftKey?.value });
+const blog = await getBlogDetail(blogId as string, { draftKey: draftKey });
 const isPreview = !!draftKey;
 ---
 
 <Layout>
-  <!-- プレビュー表示用のバッジを表示 -->
-  <PreviewBadge isPreview={isPreview} />
 
   <main class="main">
     <h1 class="title">{blog.title}</h1>
