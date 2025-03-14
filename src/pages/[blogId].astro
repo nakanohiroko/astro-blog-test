@@ -9,7 +9,8 @@ const { blogId } = Astro.params;
 // const draftKey = Astro.cookies.get('__preview_dk');
 const slug = Astro.url.searchParams.get("slug") ?? undefined;
 const draftKey = Astro.url.searchParams.get("dk") ?? undefined;
-
+console.log("slug, draftKey:" + slug, draftKey);
+console.log("slug == draftKey" + slug == draftKey);
 if (slug !== blogId) {
   Astro.cookies.delete(`__prerender_bypass`);
   // Astro.cookies.delete(`__preview_slug`);
