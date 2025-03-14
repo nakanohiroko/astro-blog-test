@@ -9,14 +9,14 @@ const draftKey = Astro.cookies.get('__preview_dk');
 const url = new URL(Astro.request.url);
 const slugParams = url.searchParams.get("slug") ?? undefined;
 const draftKeyParams = url.searchParams.get("dk") ?? undefined;
-const urlSearchParams = new URLSearchParams(window.location.search);
+const allParams = Object.fromEntries(Astro.url.searchParams.entries());
 if (slug?.value !== blogId) {
   Astro.cookies.delete(`__prerender_bypass`);
   Astro.cookies.delete(`__preview_slug`);
   Astro.cookies.delete(`__preview_dk`);
 }
 const blog = await getBlogDetail(blogId as string, { draftKey: draftKey?.value });
-console.log("urlSearchParams", urlSearchParams);
+console.log("allParams:", allParams);
 console.log("Astro.url.searchParams:", Astro.url.searchParams);
 console.log("searchParams:", url.searchParams);
 console.log("slugParams:", slugParams);
@@ -48,6 +48,12 @@ console.log("Astro.params:", Astro.params);
     <img class="thumbnail" src={blog.thumbnail.url} alt="" />
     <div class="post" set:html={blog.body}></div>
   </main>
+  <script>
+    // ブラウザ側で実行
+    const params = new URLSearchParams(window.location.search);
+    const dk = params.get('dk');
+    console.log(`dk: ${dk}`);
+  </script>
 </Layout>
 
 <style>
