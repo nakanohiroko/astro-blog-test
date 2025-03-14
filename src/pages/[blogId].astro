@@ -8,8 +8,9 @@ export const prerender = false;
 const { blogId } = Astro.params;
 const slug = Astro.cookies.get('__preview_slug');
 const draftKey = Astro.cookies.get('__preview_dk');
-const slugParams = Astro.url.searchParams.get("slug") ?? undefined;
-const draftKeyParams = Astro.url.searchParams.get("dk") ?? undefined;
+const url = new URL(Astro.request.url);
+const slugParams = url.searchParams.get("slug") ?? "";
+const draftKeyParams = url.searchParams.get("dk") ?? "";
 if (slug?.value !== blogId) {
   Astro.cookies.delete(`__prerender_bypass`);
   Astro.cookies.delete(`__preview_slug`);
