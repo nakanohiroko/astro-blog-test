@@ -9,9 +9,9 @@ const { blogId } = Astro.params;
 const slug = Astro.url.searchParams.get("slug") ?? undefined;
 const draftKey = Astro.url.searchParams.get("dk") ?? undefined;
 if (slug !== blogId) {
-  Astro.cookies.delete(`__prerender_bypass`);
-  Astro.cookies.delete(`__preview_slug`);
-  Astro.cookies.delete(`__preview_dk`);
+  // Astro.cookies.delete(`__prerender_bypass`);
+  // Astro.cookies.delete(`__preview_slug`);
+  // Astro.cookies.delete(`__preview_dk`);
 }
 const blog = await getBlogDetail(blogId as string, { draftKey: draftKey });
 ---
