@@ -1,38 +1,47 @@
 ---
-// Log the full request URL to see what's actually being received
-console.log('Full request URL:', Astro.request.url);
+// Log the complete request object details
+console.log('Request method:', Astro.request.method);
+console.log('Request URL (toString):', Astro.request.url.toString());
 
-// Check the raw headers to see if there's any information there
-console.log('Request headers:', Object.fromEntries(Astro.request.headers.entries()));
+// Try accessing the raw request URL
+const requestUrl = Astro.request.url;
+console.log('Raw request URL:', requestUrl);
 
-// Try accessing the raw query string
-const url = new URL(Astro.request.url);
-console.log('Raw query string:', url.search);
+// Check if we can access headers that might contain the original URL
+const requestedUrl = Astro.request.headers.get('x-forwarded-url') || 
+                    Astro.request.headers.get('x-original-url') ||
+                    Astro.request.headers.get('x-url');
+console.log('Forwarded URL from headers:', requestedUrl);
 
-// Try both methods of getting params
-const params = url.searchParams;
-console.log('Search params object:', params);
-console.log('All search params:', [...params.entries()]);
+// Try to get the original URL from Vercel-specific headers
+const vercelUrl = Astro.request.headers.get('x-vercel-deployment-url');
+console.log('Vercel URL:', vercelUrl);
 
-const slug = params.get('slug');
-const dk = params.get('dk');
-console.log('Specific params:', { slug, dk });
+// Get the raw query string from the request
+const rawQueryString = Astro.request.url.split('?')[1] || '';
+console.log('Raw query string:', rawQueryString);
 
-// Also log Astro.url which is another way to access the current URL
-console.log('Astro.url:', Astro.url);
-console.log('Astro.url.searchParams:', [...Astro.url.searchParams.entries()]);
+// For client reference
+const clientUrl = Astro.url.toString();
 ---
 
 <html>
-  <head><title>Debug Page</title></head>
+  <head><title>Debug Request</title></head>
   <body>
-    <h1>Debug Information</h1>
-    <p>Check your server logs for the debug information</p>
+    <h1>Server Request Debug</h1>
+    <p>Check server logs for details</p>
     
     <script>
-      // Log client-side for comparison
-      console.log('Client-side URL:', window.location.href);
-      console.log('Client-side search params:', new URLSearchParams(window.location.search).toString());
+      // Log what the client sees
+      console.log('Client URL:', window.location.href);
+      console.log('Client query string:', window.location.search);
+      
+      // Parse and display the search params on the page
+      const urlParams = new URLSearchParams(window.location.search);
+      document.body.innerHTML += `<h2>Client-side Parameters:</h2>`;
+      for (const [key, value] of urlParams.entries()) {
+        document.body.innerHTML += `<p>${key}: ${value}</p>`;
+      }
     </script>
   </body>
 </html>
