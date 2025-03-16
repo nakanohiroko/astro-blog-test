@@ -1,47 +1,72 @@
 ---
-// Log the complete request object details
-console.log('Request method:', Astro.request.method);
-console.log('Request URL (toString):', Astro.request.url.toString());
+import Layout from "../layouts/Layout.astro";
+import { getBlogDetail } from "../libs/microcms";
+import { format } from "date-fns";
 
-// Try accessing the raw request URL
-const requestUrl = Astro.request.url;
-console.log('Raw request URL:', requestUrl);
+// 記事の詳細情報を取得
+const { blogId } = Astro.params;
+const slug = Astro.cookies.get('__preview_slug');
+const draftKey = Astro.cookies.get('__preview_dk');
+const url = new URL(Astro.request.url);
+const slugParams = url.searchParams.get("slug") ?? undefined;
+const draftKeyParams = url.searchParams.get("dk") ?? undefined;
+const allParams = Object.fromEntries(Astro.url.searchParams.entries());
+if (slug?.value !== blogId) {
+  Astro.cookies.delete(`__prerender_bypass`);
+  Astro.cookies.delete(`__preview_slug`);
+  Astro.cookies.delete(`__preview_dk`);
+}
+const blog = await getBlogDetail(blogId as string, { draftKey: draftKey?.value });
+console.log("allParams:", allParams);
+console.log("Astro.url.searchParams:", Astro.url.searchParams);
+console.log("searchParams:", url.searchParams);
+console.log("slugParams:", slugParams);
+console.log("draftKeyParams:", draftKeyParams);
+console.log("Astro.request:", Astro.request);
+console.log("Astro.request.url:", Astro.request?.url);
+console.log("Astro.params:", Astro.params);
 
-// Check if we can access headers that might contain the original URL
-const requestedUrl = Astro.request.headers.get('x-forwarded-url') || 
-                    Astro.request.headers.get('x-original-url') ||
-                    Astro.request.headers.get('x-url');
-console.log('Forwarded URL from headers:', requestedUrl);
+const now = new Date();
+const formattedTime = format(now, "yyyy-MM-dd HH:mm:ss");
 
-// Try to get the original URL from Vercel-specific headers
-const vercelUrl = Astro.request.headers.get('x-vercel-deployment-url');
-console.log('Vercel URL:', vercelUrl);
-
-// Get the raw query string from the request
-const rawQueryString = Astro.request.url.split('?')[1] || '';
-console.log('Raw query string:', rawQueryString);
-
-// For client reference
-const clientUrl = Astro.url.toString();
 ---
 
-<html>
-  <head><title>Debug Request</title></head>
-  <body>
-    <h1>Server Request Debug</h1>
-    <p>Check server logs for details</p>
-    
-    <script>
-      // Log what the client sees
-      console.log('Client URL:', window.location.href);
-      console.log('Client query string:', window.location.search);
-      
-      // Parse and display the search params on the page
-      const urlParams = new URLSearchParams(window.location.search);
-      document.body.innerHTML += `<h2>Client-side Parameters:</h2>`;
-      for (const [key, value] of urlParams.entries()) {
-        document.body.innerHTML += `<p>${key}: ${value}</p>`;
+<Layout>
+  <main class="main">
+    <p>現在の時刻: {formattedTime}</p>
+    <ul>
+      <li>SlugParams:{slugParams}</li>
+      <li>draftKeyParams:{draftKeyParams}</li>
+      <li>slug:{slug}</li>
+      <li>draftKey:{draftKey}</li>
+      <li>blogId:{blogId}</li>
+    </ul>
+    <h1 class="title">{blog.title}</h1>
+    <ul>
+      {
+        blog?.tags.map((tag) => (
+          <li>{tag.name}</li>
+        ))
       }
-    </script>
-  </body>
-</html>
+    </ul>
+    <p class="publishedAt">公開日時：{blog.publishedAt}</p>
+    <img class="thumbnail" src={blog.thumbnail.url} alt="" />
+    <div class="post" set:html={blog.body}></div>
+  </main>
+  <script>
+    // ブラウザ側で実行
+    const params = new URLSearchParams(window.location.search);
+    const dk = params.get('dk');
+    console.log(`dk: ${dk}`);
+  </script>
+</Layout>
+
+<style>
+  .main {
+    margin: 0 auto;
+    max-width: 960px;
+  }
+  .thumbnail {
+    width: 100%;
+  }
+</style>
