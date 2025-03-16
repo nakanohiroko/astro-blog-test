@@ -26,6 +26,18 @@ console.log("Astro.request:", Astro.request);
 console.log("Astro.request.url:", Astro.request?.url);
 console.log("Astro.params:", Astro.params);
 
+console.log("Full URL:", Astro.url.toString());
+const searchParams = Astro.url.searchParams;
+console.log("Search params:", Object.fromEntries(searchParams));
+
+// Alternative way to access search params
+const params = Astro.request.url.split('?')[1];
+console.log("Raw params string:", params);
+
+// Parse them manually if needed
+const searchParamsManual = new URLSearchParams(params || '');
+console.log("Manual parsed params:", Object.fromEntries(searchParamsManual));
+
 const now = new Date();
 const formattedTime = format(now, "yyyy-MM-dd HH:mm:ss");
 
@@ -33,7 +45,7 @@ const formattedTime = format(now, "yyyy-MM-dd HH:mm:ss");
 
 <Layout>
   <main class="main">
-    <p>現在の時刻: {formattedTime}</p>
+    <p>現在の時刻 (SSR): {formattedTime}</p>
     <ul>
       <li>SlugParams:{slugParams}</li>
       <li>draftKeyParams:{draftKeyParams}</li>
