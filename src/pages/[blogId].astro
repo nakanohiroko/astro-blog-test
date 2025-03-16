@@ -26,17 +26,22 @@ console.log("Astro.request:", Astro.request);
 console.log("Astro.request.url:", Astro.request?.url);
 console.log("Astro.params:", Astro.params);
 
-console.log("Full URL:", Astro.url.toString());
-const searchParams = Astro.url.searchParams;
-console.log("Search params:", Object.fromEntries(searchParams));
+const headers = Object.fromEntries(
+  [...Astro.request.headers.entries()].map(([key, value]) => [key.toLowerCase(), value])
+);
+console.log("All headers:", headers);
 
-// Alternative way to access search params
-const params = Astro.request.url.split('?')[1];
-console.log("Raw params string:", params);
+// Check for specific Draft Mode related cookies or headers
+const cookies = headers.cookie || '';
+console.log("Cookies:", cookies);
 
-// Parse them manually if needed
-const searchParamsManual = new URLSearchParams(params || '');
-console.log("Manual parsed params:", Object.fromEntries(searchParamsManual));
+// Check for Vercel-specific headers
+const vercelHeaders = Object.keys(headers).filter(key => key.includes('vercel') || key.includes('x-'));
+console.log("Vercel headers:", vercelHeaders.map(key => [key, headers[key]]));
+
+// Check if there's a referrer with query params
+const referrer = Astro.request.headers.get('referer');
+console.log("Referrer:", referrer);
 
 const now = new Date();
 const formattedTime = format(now, "yyyy-MM-dd HH:mm:ss");
