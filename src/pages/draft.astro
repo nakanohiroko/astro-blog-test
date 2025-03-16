@@ -8,5 +8,11 @@ if (draftKey && slug) {
   Astro.cookies.set(`__preview_dk`, draftKey);
 }
 
-return Astro.redirect(`/${slug}?slug=${slug}&dk=${draftKey}`);
+// return Astro.redirect(`/${slug}?slug=${slug}&dk=${draftKey}`);
+return new Response(null, {
+  status: 302, // 一時リダイレクト
+  headers: {
+    Location: `/${slug}?slug=${slug}&dk=${draftKey}`,
+  },
+});
 ---
